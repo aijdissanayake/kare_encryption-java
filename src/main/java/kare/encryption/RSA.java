@@ -27,6 +27,17 @@ import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.io.pem.PemWriter;
 
+
+/**
+* <h1>Kare Encryption</h1>
+*
+* RSA Encryption library
+*
+* @author  Achala Dissanayake
+* @version 1.0.0
+* @since   2018-12-28
+*/
+
 public class RSA{
 
     private static final String algorithm = "RSA";
