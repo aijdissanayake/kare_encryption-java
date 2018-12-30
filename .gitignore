@@ -29,3 +29,9 @@ hs_err_pid*
 
 #junk
 junk.java
+
+# docfiles
+*.html
+*.css
+*.js
+package-list

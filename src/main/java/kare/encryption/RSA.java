@@ -38,10 +38,12 @@ import org.bouncycastle.util.io.pem.PemWriter;
 * @since   2018-12-28
 */
 
-public class RSA{
+public final class RSA{
 
     private static final String algorithm = "RSA";
-    
+	
+	private RSA(){}
+	
 	/**
 	 * The method that will generate a RSA private public key pair.
 	 * 
