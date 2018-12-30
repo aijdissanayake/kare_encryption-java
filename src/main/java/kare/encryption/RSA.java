@@ -31,6 +31,14 @@ public class RSA{
 
     private static final String algorithm = "RSA";
     
+	/**
+	 * The method that will generate a RSA private public key pair.
+	 * 
+	 * @param keyLength
+	 * 		The is the bit length of the key.
+	 * 
+	 * @return The generated key pair in the form of {@link KeyPair}, otherwise {@code null} if key generation could not be performed.
+	 */ 
     public static KeyPair generateKeyPair(int keyLength){
         try {
 			final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm);
@@ -44,10 +52,26 @@ public class RSA{
 		return null;
     }
 
+	/**
+	 * The method that will generate a RSA private public key pair of bit length 2048.
+	 * 
+	 * @return The generated 2048 bit size key pair in the form of {@link KeyPair}, otherwise {@code null} if key generation could not be performed.
+	 */ 
     public static KeyPair generateKeyPair(){
         return generateKeyPair(2048);
     }
 
+	/**
+	 * The method that will save a public key in a .key file PKCS #8 - pem format.
+	 * 
+	 * @param publicKey
+	 * 		The {@link PublicKey} that need to be saved in a .key file.
+	 * 
+	 * @param fileSavePath
+	 * 		The path including the file name where the publicKey should be saved.
+	 * 
+	 * @return {@code true} if the key is saved in a .key file successfully, otherwise {@code false}.
+	 */
     public static boolean savePublicKey(PublicKey publicKey, String fileSavePath) throws NoSuchAlgorithmException, IOException, OperatorCreationException, InvalidKeySpecException {
         try{
             byte[] pubBytes = publicKey.getEncoded();
@@ -69,6 +93,17 @@ public class RSA{
         return false;
     }
 
+	/**
+	 * The method that will save a RSA private key in a .key file in the PKCS #8 - pem format.
+	 * 
+	 * @param privateKey
+	 * 		The {@link PrivateKey} that need to be saved in a .key file.
+	 * 
+	 * @param fileSavePath
+	 * 		The path including the file name where the privateKey should be saved.
+	 * 
+	 * @return {@code true} if the key is saved in a .key file successfully, otherwise {@code false}.
+	 */
     public static boolean savePrivateKey(PrivateKey privateKey, String fileSavePath) throws NoSuchAlgorithmException, IOException, OperatorCreationException, InvalidKeySpecException {
         try{
             byte[] pvtBytes = privateKey.getEncoded();
@@ -90,6 +125,69 @@ public class RSA{
         return false;
     }
 
+	/**
+	 * The method that will import a RSA public key from a .key file which is in the PKCS #8 - pem format.
+	 * 
+	 * @param filePath
+	 * 		The file path including the file name where the public key to be imported is located.
+	 * 
+	 * @return The imported public key in the formt of {@link PublicKey} if the key is imported successfully, otherwise {@code null}.
+	 */
+    public static PublicKey importPublicKey(String filePath) throws FileNotFoundException, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
+        Security.addProvider(new BouncyCastleProvider());
+        PemReader pemReader = new PemReader(new InputStreamReader(new FileInputStream(filePath)));
+        try {
+            PemObject pemObject = pemReader.readPemObject();
+            byte[] content = pemObject.getContent();
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(content);
+            KeyFactory factory = KeyFactory.getInstance("RSA", "BC");
+            return factory.generatePublic(pubKeySpec);
+        }catch (Exception e) {
+            e.printStackTrace();
+		}
+        finally {
+            pemReader.close();
+        }
+        return null;        
+    }
+
+	/**
+	 * The method that will import a RSA private key from a .key file which is in the PKCS #8 - pem format.
+	 * 
+	 * @param filePath
+	 * 		The file path including the file name where the private key to be imported is located.
+	 * 
+	 * @return The imported private key in the formt of {@link PrivateKey} if the key is imported successfully, otherwise {@code null}.
+	 */
+    public static PrivateKey importPrivateKey(String filePath) throws FileNotFoundException, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
+        Security.addProvider(new BouncyCastleProvider());
+        PemReader pemReader = new PemReader(new InputStreamReader(new FileInputStream(filePath)));
+        try {
+            PemObject pemObject = pemReader.readPemObject();
+            byte[] content = pemObject.getContent();
+            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(content);
+            KeyFactory factory = KeyFactory.getInstance("RSA", "BC");
+            return factory.generatePrivate(privKeySpec);
+        }catch (Exception e) {
+            e.printStackTrace();
+		}
+        finally {
+            pemReader.close();
+        }
+        return null;       
+    }
+
+    /**
+	 * The method that will encrypt a String.
+	 * 
+	 * @param key
+	 * 		The {@link PublicKey} used to encrypt the data.
+	 * 
+	 * @param data
+	 * 		The data in the form of a String.
+	 * 
+	 * @return The encrypted base64 encoded String, otherwise {@code null} if encryption could not be performed.
+	 */
     public static String encrypt(PublicKey key, String data) {		
 		try {
 			final Cipher cipher = Cipher.getInstance(algorithm);
@@ -102,6 +200,17 @@ public class RSA{
 		return null;
     }
     
+    /**
+	 * The method that will decrypt a base64 encoded encrypted String.
+	 * 
+	 * @param key
+	 * 		The {@link PrivateKey} used to decrypt the data.
+	 * 
+	 * @param encryptedData
+	 * 		The encrypted in the form of base64 encoded String.
+	 * 
+	 * @return The decrypted data in the form of String, otherwise {@code null} if decryption could not be performed.
+	 */
     public static String decrypt(PrivateKey key, String encryptedData) {
 		try {
 			final Cipher cipher = Cipher.getInstance(algorithm);
@@ -116,31 +225,4 @@ public class RSA{
 		return null;
     }
 
-    public static PublicKey importPublicKey(String filename) throws FileNotFoundException, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
-        Security.addProvider(new BouncyCastleProvider());
-        PemReader pemReader = new PemReader(new InputStreamReader(new FileInputStream(filename)));
-        try {
-            PemObject pemObject = pemReader.readPemObject();
-            byte[] content = pemObject.getContent();
-            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(content);
-            KeyFactory factory = KeyFactory.getInstance("RSA", "BC");
-            return factory.generatePublic(pubKeySpec);
-        }finally {
-            pemReader.close();
-        }        
-    }
-
-    public static PrivateKey importPrivateKey(String filename) throws FileNotFoundException, IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException{
-        Security.addProvider(new BouncyCastleProvider());
-        PemReader pemReader = new PemReader(new InputStreamReader(new FileInputStream(filename)));
-        try {
-            PemObject pemObject = pemReader.readPemObject();
-            byte[] content = pemObject.getContent();
-            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(content);
-            KeyFactory factory = KeyFactory.getInstance("RSA", "BC");
-            return factory.generatePrivate(privKeySpec);
-        }finally {
-            pemReader.close();
-        }        
-    }
 }
