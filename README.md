@@ -1,5 +1,23 @@
 # Documentation
 
+## Install
+
+Place the `kare-encryption.jar` (can be found in the `build\libs` folder of this project) and the dependencies by `BouncyCastle`; `bcpkix-jdk15on-160.jar` and `bcprov-jdk15on-159.jar` (can be found in the `libs` folder of this project or download online at [BouncyCastle releases](https://www.bouncycastle.org/latest_releases.html).) in the library folder of your project.
+
+## Initialize/Import
+
+Import the RSA implementation in the `.java` file you want to use as follow,
+
+```java
+import kare.encryption.RSA;
+```
+
+Then access the static methods from the class `RSA` inside the functions you want to use them as follow,
+
+```java
+KeyPair keyPair = RSA.generateKeyPair();
+```
+
 ## `public final class RSA`
 
 <h1>Kare Encryption</h1>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>building-java-libraries</name>
-	<comment>Project building-java-libraries created by Buildship.</comment>
+	<name>kare-encryption</name>
+	<comment>Library kare-encryption created by Achala Dissanayake.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
