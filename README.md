@@ -1,3 +1,9 @@
+# KARE ENCRYPTION
+
+ * **Author:** Achala Dissanayake
+ * **Version:** 1.0.0
+ * **Since:** 2018-12-28
+
 # Documentation
 
 ## Install
@@ -18,15 +24,10 @@ Then access the static methods from the class `RSA` inside the functions you wan
 KeyPair keyPair = RSA.generateKeyPair();
 ```
 
-## `public final class RSA`
+# `public final class RSA`
 
-<h1>Kare Encryption</h1>
+RSA class of Kare Encryption library
 
-RSA Encryption library
-
- * **Author:** Achala Dissanayake
- * **Version:** 1.0.0
- * **Since:** 2018-12-28
 
 ## `public static KeyPair generateKeyPair(int keyLength)`
 
